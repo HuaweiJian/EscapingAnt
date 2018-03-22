@@ -4,11 +4,13 @@ Source code from Huawei Jian for python coursework of UCL MATH1402.
 
 from math import *
 from random import *
+import matplotlib.pyplot as plt
 
 
 def read_file():
     """
-    Read all Pythagorean triples from $triangle_triples.data into a list `trpls`
+    *read file $triangle_triples.data into a string `inflie`
+    *split the string, store triples of numbers(string casted) into 'trpls'
     """    
     infile = open('triangle_triples.data', 'r')
     trpls = []
@@ -31,7 +33,7 @@ def random_pnt(a,b):
 	x = random()* a
 	y = random()* b
                	
-         # This point is valid if it's inside the triangle
+         # point is valid if inside the triangle
         if y < -1.* (b/a) * x + b:
             inside = False
     return [x,y]
@@ -48,41 +50,66 @@ def random_pnt(a,b):
             |  .  . \
             C__.____.B
                Q  a
-    return true if the ant leaves via the hypotenuse  
+    
     """
 
 def monte_carlo(a,b):
     """
-    parameters: one triple 
-    outputs: 
+    parameters: two shorter sides of each triple 
+    feature:compute N times: create random sides, accumulate the probs
+    output: divide the sum by N to get average prob of the N trials
     """
-    N = 60000    
+    # container to hold sum of probs
     probs = 0.
-    
+    # trial number 
+    N = 60000
+
     for i in range(N):
         x,y = random_pnt(a,b)
         probs += 1/(2*pi) * (pi/2 + atan2(x,b-y) + atan2(y,a-x)) 
+
     return probs/N
     
+
+def plot(p):
+    """
+    *plot a histogram for distribution of triangles 
+    """
+    plt.hist(p, bins=30, edgecolor='tab:orange', linewidth=1.5)
+    plt.title("Distribution of Pythagorean triangles over exit probability")
+    plt.ylabel("Number of triangles")
+    plt.xlabel("Exiting probability")
+    plt.savefig("my_histogram.png")
+
+
 		 
 def  main():
+    """ 
+        *read all triples from the file into `trpls`
+        *implement monte carlo method on each one
+        *store results into `p`
+        *get max/min from p, trace initial triple from indices
+        *plot a histogram 
+    """
 
     trpls = read_file()
-    all_probs = []
+
+    # holds all prob from the triples
+    p = []
     
     for i in range(len(trpls)):
         a,b,c = trpls[i]
-        all_probs.append(monte_carlo(a,b)) 
+        p.append(monte_carlo(a,b)) 
             
-    
-    #get min and max values of probs and triples associated
-    max_index, max_prob = max(enumerate(all_probs))
-    print "max:",trpls[max_index], max_prob
+    # get min and max values of probs and triples associated
+    print "this triple is:",trpls[p.index(max(p))]
+    print "with max prob", max(p)
 
-    min_index, min_prob = min(enumerate(all_probs))
-    print "min:",trpls[min_index], min_prob 
+    print "this triple is:",trpls[p.index(min(p))]
+    print "with min prob", min(p)
 
 
+    plot(p)
 
 main()
-print monte_carlo(3.,4.)
+#print monte_carlo(3.,4.)
