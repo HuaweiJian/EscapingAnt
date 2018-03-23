@@ -81,7 +81,6 @@ def plot(p):
     plt.xlabel("Exiting probability")
     plt.savefig("my_histogram.png")
 
-
 		 
 def  main():
     """ 
@@ -101,15 +100,18 @@ def  main():
         a,b,c = trpls[i]
         p.append(monte_carlo(a,b)) 
             
+    print p
+    
     # get min and max values of probs and triples associated
-    print "this triple is:",trpls[p.index(max(p))]
-    print "with max prob", max(p)
+    print "triple with max exit prob is",trpls[p.index(max(p))]
+    print "with rob", max(p)
 
-    print "this triple is:",trpls[p.index(min(p))]
-    print "with min prob", min(p)
-
+    print "triple with min exit prob is:",trpls[p.index(min(p))]
+    print "with prob", min(p)
 
     plot(p)
 
+
 main()
+
 #print monte_carlo(3.,4.)
